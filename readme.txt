@@ -1,0 +1,15 @@
+Ver 1.4.1, Sep 6, 2018
+  -ojdbc6.jar dependency: now using jar hosted at attlasian maven repo
+
+Ver 1.4, Jul 30, 2018
+  -updated from java 1.7 to java 1.8; updated logging to log4j
+
+Ver 1.3, Feb 16, 2017
+  -updated build from ANT to GRADLE
+
+Ver 1.2, Nov 2, 2015
+  -updated build.xml from java 1.6 to 1.7
+
+Ver 1.1, Sep 3, 2013
+  -changed loading algorithm to incremental-update from drop-and-reload
+  -added detailed logging of all inserts and deletes

@@ -1,0 +1,7 @@
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="manager" class="edu.mcw.rgd.CosmicImport">
+        <property name="version" value="--Cosmic Import pipeline -- ver. 1.4.1 -- Sep 6, 2018 --" />
+    </bean>
+</beans>
