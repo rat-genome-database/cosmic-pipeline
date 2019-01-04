@@ -1,3 +1,6 @@
+Ver 1.4.2, Jan 4, 2019
+  -summary email tuneup
+
 Ver 1.4.1, Sep 6, 2018
   -ojdbc6.jar dependency: now using jar hosted at attlasian maven repo
 
