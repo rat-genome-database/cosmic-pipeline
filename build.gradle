@@ -33,6 +33,19 @@ dependencies {
     compile fileTree(dir: 'lib', include: '*.jar')
 }
 
+jar {
+    baseName = myAppName
+    manifest {
+        attributes(
+            'Built-By': System.getProperty('user.name'),
+            'Built-Date': new Date(),
+            'Built-JDK': System.getProperty('java.version'),
+            'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+            'Main-Class': mainClassName
+        )
+    }
+}
+
 distributions {
     main {
         baseName = myAppName
