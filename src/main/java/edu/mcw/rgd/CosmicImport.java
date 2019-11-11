@@ -9,6 +9,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.FileSystemResource;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,10 @@ public class CosmicImport {
         long time0 = System.currentTimeMillis();
 
         log.info(getVersion());
-        log.info(dao.getConnectionInfo());
+        log.info("   "+dao.getConnectionInfo());
+
+        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        log.info("   started at "+sdt.format(new Date()));
 
         // QC
         log.info("QC: get Cosmic Ids in RGD");

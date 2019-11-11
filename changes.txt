@@ -1,3 +1,6 @@
+Nov 11, 2019
+  -improved logging
+
 Ver 1.4.3, Feb 15, 2019
   -updated dependencies
 
