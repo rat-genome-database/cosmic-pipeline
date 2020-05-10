@@ -1,3 +1,6 @@
+May 10, 2020
+  -updated jar dependencies
+
 Nov 11, 2019
   -improved logging
 

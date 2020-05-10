@@ -17,19 +17,15 @@ String myAppName = 'cosmicPipeline'
 
 repositories {
     mavenCentral()
-    maven {
-        url 'https://packages.atlassian.com/maven-3rdparty'
-    }
 }
 
 dependencies {
-    compile 'org.apache.commons:commons-dbcp2:2.6.0'
+    compile 'org.apache.commons:commons-dbcp2:2.7.0'
     compile 'commons-net:commons-net:3.6'
     compile 'log4j:log4j:1.2.17'
-    compile 'org.springframework:spring-beans:5.1.6.RELEASE'
-    compile 'org.springframework:spring-jdbc:5.1.6.RELEASE'
-    compile 'com.oracle:ojdbc6:11.2.0.4.0-atlassian-hosted'
-	
+    compile 'org.springframework:spring-beans:5.1.7.RELEASE'
+    compile 'org.springframework:spring-jdbc:5.1.7.RELEASE'
+
     compile fileTree(dir: 'lib', include: '*.jar')
 }
 
