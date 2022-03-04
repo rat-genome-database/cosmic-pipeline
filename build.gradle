@@ -15,22 +15,25 @@ targetCompatibility = 1.8
 mainClassName = 'edu.mcw.rgd.CosmicImport'
 String myAppName = 'cosmicPipeline'
 
+project.archivesBaseName = myAppName
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'org.apache.commons:commons-dbcp2:2.7.0'
-    compile 'commons-net:commons-net:3.6'
-    compile 'log4j:log4j:1.2.17'
-    compile 'org.springframework:spring-beans:5.1.7.RELEASE'
-    compile 'org.springframework:spring-jdbc:5.1.7.RELEASE'
+    compile 'org.apache.commons:commons-dbcp2:2.8.0'
+    compile 'commons-net:commons-net:3.7'
+    compile 'org.apache.logging.log4j:log4j-api:2.17.1'
+    compile 'org.apache.logging.log4j:log4j-core:2.17.1'
+    compile 'com.oracle.database.jdbc:ojdbc8:19.7.0.0'
+    compile 'org.springframework:spring-beans:5.1.8.RELEASE'
+    compile 'org.springframework:spring-jdbc:5.1.8.RELEASE'
 
     compile fileTree(dir: 'lib', include: '*.jar')
 }
 
 jar {
-    baseName = myAppName
     manifest {
         attributes(
             'Built-By': System.getProperty('user.name'),

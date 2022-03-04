@@ -5,7 +5,8 @@ import edu.mcw.rgd.dao.impl.XdbIdDAO;
 import edu.mcw.rgd.datamodel.Gene;
 import edu.mcw.rgd.datamodel.SpeciesType;
 import edu.mcw.rgd.datamodel.XdbId;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,8 @@ public class CosmicDAO {
     XdbIdDAO xdao = new XdbIdDAO();
     GeneDAO gdao = new GeneDAO();
 
-    Logger logInserted = Logger.getLogger("insertedIds");
-    Logger logDeleted = Logger.getLogger("deletedIds");
+    Logger logInserted = LogManager.getLogger("inserted");
+    Logger logDeleted = LogManager.getLogger("deleted");
 
     public String getConnectionInfo() {
         return xdao.getConnectionInfo();

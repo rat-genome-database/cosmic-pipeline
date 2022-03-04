@@ -10,7 +10,7 @@ APPDIR=/home/rgddata/pipelines/$APPNAME
 cd $APPDIR
 
 java -Dspring.config=$APPDIR/../properties/default_db2.xml \
-    -Dlog4j.configuration=file://$APPDIR/properties/log4j.properties \
+    -Dlog4j.configurationFile=file://$APPDIR/properties/log4j2.xml \
     -jar lib/${APPNAME}.jar "$@" > run.log 2>&1
 
 mailx -s "[$SERVER] Cosmic Pipeline run" mtutaj@mcw.edu < $APPDIR/logs/status.log
