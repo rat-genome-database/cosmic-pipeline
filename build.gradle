@@ -22,13 +22,13 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.commons:commons-dbcp2:2.8.0'
-    compile 'commons-net:commons-net:3.7'
-    compile 'org.apache.logging.log4j:log4j-api:2.17.1'
-    compile 'org.apache.logging.log4j:log4j-core:2.17.1'
-    compile 'com.oracle.database.jdbc:ojdbc8:19.7.0.0'
-    compile 'org.springframework:spring-beans:5.1.8.RELEASE'
-    compile 'org.springframework:spring-jdbc:5.1.8.RELEASE'
+    compile 'org.apache.commons:commons-dbcp2:2.9.0'
+    compile 'commons-net:commons-net:3.7.1'
+    compile 'org.apache.logging.log4j:log4j-api:2.17.2'
+    compile 'org.apache.logging.log4j:log4j-core:2.17.2'
+    compile 'com.oracle.database.jdbc:ojdbc8:19.8.0.0'
+    compile 'org.springframework:spring-beans:5.1.9.RELEASE'
+    compile 'org.springframework:spring-jdbc:5.1.9.RELEASE'
 
     compile fileTree(dir: 'lib', include: '*.jar')
 }
