@@ -3,7 +3,7 @@
 # cosmic loading pipeline
 #
 . /etc/profile
-APPNAME=cosmicPipeline
+APPNAME="cosmic-pipeline"
 SERVER=`hostname -s | tr '[a-z]' '[A-Z]'`
 
 APPDIR=/home/rgddata/pipelines/$APPNAME
