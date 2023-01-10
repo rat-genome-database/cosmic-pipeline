@@ -1,3 +1,6 @@
+Jan 10, 2023
+  updated build.gradle to be gradle 6.x + compatible
+
 May 04, 2022
   renamed distro to 'cosmic-pipeline'
 
