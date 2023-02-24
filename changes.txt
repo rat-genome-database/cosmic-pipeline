@@ -1,3 +1,6 @@
+Feb 24, 2023
+  simplified summary email
+
 Jan 16, 2023
   github: renamed 'master' to 'main'
 

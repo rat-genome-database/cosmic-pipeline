@@ -8,6 +8,8 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.FileSystemResource;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,44 +51,53 @@ public class CosmicImport {
         log.info("   started at "+sdt.format(new Date()));
 
         // QC
-        log.info("QC: get Cosmic Ids in RGD");
+        log.debug("QC: get Cosmic Ids in RGD");
         List<XdbId> cosmicIdsInRgd = dao.getCosmicXdbIds();
-        log.info("QC: get incoming Cosmic Ids");
+        int initialCosmicIdCount = cosmicIdsInRgd.size();
+        log.debug("QC: get incoming Cosmic Ids");
         List<XdbId> cosmicIdsIncoming = getIncomingCosmicIds();
 
         // determine to-be-inserted cosmic ids
-        log.info("QC: determine to-be-inserted Cosmic Ids");
+        log.debug("QC: determine to-be-inserted Cosmic Ids");
         List<XdbId> cosmicIdsToBeInserted = new ArrayList<XdbId>(cosmicIdsIncoming);
         cosmicIdsToBeInserted.removeAll(cosmicIdsInRgd);
 
         // determine matching cosmic ids
-        log.info("QC: determine matching Cosmic Ids");
+        log.debug("QC: determine matching Cosmic Ids");
         List<XdbId> cosmicIdsMatching = new ArrayList<XdbId>(cosmicIdsIncoming);
         cosmicIdsMatching.retainAll(cosmicIdsInRgd);
 
         // determine to-be-deleted cosmic ids
-        log.info("QC: determine to-be-deleted Cosmic Ids");
+        log.debug("QC: determine to-be-deleted Cosmic Ids");
         cosmicIdsInRgd.removeAll(cosmicIdsIncoming);
         List<XdbId> cosmicIdsToBeDeleted = cosmicIdsInRgd;
 
 
+        int cosmicIdCountDiff = 0;
         // loading
         if( !cosmicIdsToBeInserted.isEmpty() ) {
-            log.info("inserting xdb ids for COSMIC (Human): "+cosmicIdsToBeInserted.size());
+            log.info(" COSMIC xdb ids inserted: "+cosmicIdsToBeInserted.size());
             dao.insertXdbs(cosmicIdsToBeInserted);
+            cosmicIdCountDiff += cosmicIdsToBeInserted.size();
         }
 
         if( !cosmicIdsToBeDeleted.isEmpty() ) {
-            log.info("Deleting xdb ids for COSMIC (Human): "+cosmicIdsToBeDeleted.size());
+            log.info(" COSMIC xdb ids deleted: "+cosmicIdsToBeDeleted.size());
             dao.deleteXdbIds(cosmicIdsToBeDeleted);
+            cosmicIdCountDiff -= cosmicIdsToBeDeleted.size();
         }
 
         if( !cosmicIdsMatching.isEmpty() ) {
-            log.info("matching xdb ids for COSMIC (Human): "+cosmicIdsMatching.size());
+            log.info(" COSMIC xdb ids matching: "+cosmicIdsMatching.size());
             dao.updateModificationDate(cosmicIdsMatching);
         }
 
-        log.info("=== Cosmic ID generation complete -- elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
+        NumberFormat plusMinusNF = new DecimalFormat(" +###,###,###; -###,###,###");
+        String diffCountStr = cosmicIdCountDiff!=0 ? "     difference: "+ plusMinusNF.format(cosmicIdCountDiff) : "     no changes";
+        log.info("final COSMIC ID count: "+Utils.formatThousands(initialCosmicIdCount+cosmicIdCountDiff)+diffCountStr);
+
+        log.info("=== COSMIC ID generation complete (for human) -- elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
+        log.info("===");
     }
 
     List<XdbId> getIncomingCosmicIds() throws Exception {
