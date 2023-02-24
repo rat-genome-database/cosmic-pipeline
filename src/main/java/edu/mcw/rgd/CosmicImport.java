@@ -76,19 +76,19 @@ public class CosmicImport {
         int cosmicIdCountDiff = 0;
         // loading
         if( !cosmicIdsToBeInserted.isEmpty() ) {
-            log.info(" COSMIC xdb ids inserted: "+cosmicIdsToBeInserted.size());
+            log.info("  COSMIC xdb ids inserted: "+Utils.formatThousands(cosmicIdsToBeInserted.size()));
             dao.insertXdbs(cosmicIdsToBeInserted);
             cosmicIdCountDiff += cosmicIdsToBeInserted.size();
         }
 
         if( !cosmicIdsToBeDeleted.isEmpty() ) {
-            log.info(" COSMIC xdb ids deleted: "+cosmicIdsToBeDeleted.size());
+            log.info("  COSMIC xdb ids deleted: "+Utils.formatThousands(cosmicIdsToBeDeleted.size()));
             dao.deleteXdbIds(cosmicIdsToBeDeleted);
             cosmicIdCountDiff -= cosmicIdsToBeDeleted.size();
         }
 
         if( !cosmicIdsMatching.isEmpty() ) {
-            log.info(" COSMIC xdb ids matching: "+cosmicIdsMatching.size());
+            log.info("  COSMIC xdb ids matching: "+Utils.formatThousands(cosmicIdsMatching.size()));
             dao.updateModificationDate(cosmicIdsMatching);
         }
 
@@ -96,7 +96,7 @@ public class CosmicImport {
         String diffCountStr = cosmicIdCountDiff!=0 ? "     difference: "+ plusMinusNF.format(cosmicIdCountDiff) : "     no changes";
         log.info("final COSMIC ID count: "+Utils.formatThousands(initialCosmicIdCount+cosmicIdCountDiff)+diffCountStr);
 
-        log.info("=== COSMIC ID generation complete (for human) -- elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
+        log.info("processing complete -- elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
         log.info("===");
     }
 
