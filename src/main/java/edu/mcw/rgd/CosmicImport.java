@@ -1,6 +1,7 @@
 package edu.mcw.rgd;
 
 import edu.mcw.rgd.datamodel.*;
+import edu.mcw.rgd.process.MemoryMonitor;
 import edu.mcw.rgd.process.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,6 +44,9 @@ public class CosmicImport {
     public void run() throws Exception {
 
         long time0 = System.currentTimeMillis();
+
+        MemoryMonitor memoryMonitor = new MemoryMonitor();
+        memoryMonitor.start();
 
         log.info(getVersion());
         log.info("   "+dao.getConnectionInfo());
@@ -95,6 +99,9 @@ public class CosmicImport {
         NumberFormat plusMinusNF = new DecimalFormat(" +###,###,###; -###,###,###");
         String diffCountStr = cosmicIdCountDiff!=0 ? "     difference: "+ plusMinusNF.format(cosmicIdCountDiff) : "     no changes";
         log.info("final COSMIC ID count: "+Utils.formatThousands(initialCosmicIdCount+cosmicIdCountDiff)+diffCountStr);
+
+        memoryMonitor.stop();
+        log.info(memoryMonitor.getSummary());
 
         log.info("processing complete -- elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
         log.info("===");

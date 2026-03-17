@@ -2,6 +2,6 @@
 
 <beans>
     <bean id="manager" class="edu.mcw.rgd.CosmicImport">
-        <property name="version" value="Cosmic Import pipeline   -- build Sep 29, 2025" />
+        <property name="version" value="cosmic-pipeline   -- build Mar 17, 2026" />
     </bean>
 </beans>
