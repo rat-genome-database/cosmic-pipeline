@@ -1,3 +1,6 @@
+Apr 29, 2026
+  updated README.md; updated dependencies
+
 Mar 17, 2026
   added memory usage monitoring
   removed unused imports
