@@ -3,6 +3,7 @@ package edu.mcw.rgd;
 import edu.mcw.rgd.datamodel.*;
 import edu.mcw.rgd.process.MemoryMonitor;
 import edu.mcw.rgd.process.Utils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -13,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -63,18 +65,15 @@ public class CosmicImport {
 
         // determine to-be-inserted cosmic ids
         log.debug("QC: determine to-be-inserted Cosmic Ids");
-        List<XdbId> cosmicIdsToBeInserted = new ArrayList<XdbId>(cosmicIdsIncoming);
-        cosmicIdsToBeInserted.removeAll(cosmicIdsInRgd);
+        Collection<XdbId> cosmicIdsToBeInserted = CollectionUtils.subtract(cosmicIdsIncoming, cosmicIdsInRgd);
 
         // determine matching cosmic ids
         log.debug("QC: determine matching Cosmic Ids");
-        List<XdbId> cosmicIdsMatching = new ArrayList<XdbId>(cosmicIdsIncoming);
-        cosmicIdsMatching.retainAll(cosmicIdsInRgd);
+        Collection<XdbId> cosmicIdsMatching = CollectionUtils.intersection(cosmicIdsIncoming, cosmicIdsInRgd);
 
         // determine to-be-deleted cosmic ids
         log.debug("QC: determine to-be-deleted Cosmic Ids");
-        cosmicIdsInRgd.removeAll(cosmicIdsIncoming);
-        List<XdbId> cosmicIdsToBeDeleted = cosmicIdsInRgd;
+        Collection<XdbId> cosmicIdsToBeDeleted = CollectionUtils.subtract(cosmicIdsInRgd, cosmicIdsIncoming);
 
 
         int cosmicIdCountDiff = 0;
@@ -116,7 +115,7 @@ public class CosmicImport {
             x.setAccId(g.getSymbol());
             x.setSrcPipeline("COSMIC");
             x.setRgdId(g.getRgdId());
-            x.setXdbKey(45);
+            x.setXdbKey(XdbId.XDB_KEY_COSMIC);
             x.setCreationDate(new Date());
             x.setModificationDate(new Date());
             x.setLinkText(g.getSymbol());

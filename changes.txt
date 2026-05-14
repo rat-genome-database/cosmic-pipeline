@@ -1,3 +1,6 @@
+May 14, 2026
+  switched QC set algebra to commons-collections4 (O(n+m) instead of O(n*n)); replaced magic xdb_key=45 literal with XdbId.XDB_KEY_COSMIC; updated dependencies
+
 Apr 29, 2026
   updated README.md; updated dependencies
 
