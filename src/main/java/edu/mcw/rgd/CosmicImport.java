@@ -50,60 +50,63 @@ public class CosmicImport {
         MemoryMonitor memoryMonitor = new MemoryMonitor();
         memoryMonitor.start();
 
-        log.info(getVersion());
-        log.info("   "+dao.getConnectionInfo());
+        try {
+            log.info(getVersion());
+            log.info("   "+dao.getConnectionInfo());
 
-        SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        log.info("   started at "+sdt.format(new Date()));
+            SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            log.info("   started at "+sdt.format(new Date()));
 
-        // QC
-        log.debug("QC: get Cosmic Ids in RGD");
-        List<XdbId> cosmicIdsInRgd = dao.getCosmicXdbIds();
-        int initialCosmicIdCount = cosmicIdsInRgd.size();
-        log.debug("QC: get incoming Cosmic Ids");
-        List<XdbId> cosmicIdsIncoming = getIncomingCosmicIds();
+            // QC
+            log.debug("QC: get Cosmic Ids in RGD");
+            List<XdbId> cosmicIdsInRgd = dao.getCosmicXdbIds();
+            int initialCosmicIdCount = cosmicIdsInRgd.size();
+            log.debug("QC: get incoming Cosmic Ids");
+            List<XdbId> cosmicIdsIncoming = getIncomingCosmicIds();
 
-        // determine to-be-inserted cosmic ids
-        log.debug("QC: determine to-be-inserted Cosmic Ids");
-        Collection<XdbId> cosmicIdsToBeInserted = CollectionUtils.subtract(cosmicIdsIncoming, cosmicIdsInRgd);
+            // determine to-be-inserted cosmic ids
+            log.debug("QC: determine to-be-inserted Cosmic Ids");
+            Collection<XdbId> cosmicIdsToBeInserted = CollectionUtils.subtract(cosmicIdsIncoming, cosmicIdsInRgd);
 
-        // determine matching cosmic ids
-        log.debug("QC: determine matching Cosmic Ids");
-        Collection<XdbId> cosmicIdsMatching = CollectionUtils.intersection(cosmicIdsIncoming, cosmicIdsInRgd);
+            // determine matching cosmic ids
+            // note: use the in-RGD objects (they carry ACC_XDB_KEY) so the modification-date update works
+            log.debug("QC: determine matching Cosmic Ids");
+            Collection<XdbId> cosmicIdsMatching = CollectionUtils.intersection(cosmicIdsInRgd, cosmicIdsIncoming);
 
-        // determine to-be-deleted cosmic ids
-        log.debug("QC: determine to-be-deleted Cosmic Ids");
-        Collection<XdbId> cosmicIdsToBeDeleted = CollectionUtils.subtract(cosmicIdsInRgd, cosmicIdsIncoming);
+            // determine to-be-deleted cosmic ids
+            log.debug("QC: determine to-be-deleted Cosmic Ids");
+            Collection<XdbId> cosmicIdsToBeDeleted = CollectionUtils.subtract(cosmicIdsInRgd, cosmicIdsIncoming);
 
 
-        int cosmicIdCountDiff = 0;
-        // loading
-        if( !cosmicIdsToBeInserted.isEmpty() ) {
-            log.info("  COSMIC xdb ids inserted: "+Utils.formatThousands(cosmicIdsToBeInserted.size()));
-            dao.insertXdbs(cosmicIdsToBeInserted);
-            cosmicIdCountDiff += cosmicIdsToBeInserted.size();
+            int cosmicIdCountDiff = 0;
+            // loading
+            if( !cosmicIdsToBeInserted.isEmpty() ) {
+                log.info("  COSMIC xdb ids inserted: "+Utils.formatThousands(cosmicIdsToBeInserted.size()));
+                dao.insertXdbs(cosmicIdsToBeInserted);
+                cosmicIdCountDiff += cosmicIdsToBeInserted.size();
+            }
+
+            if( !cosmicIdsToBeDeleted.isEmpty() ) {
+                log.info("  COSMIC xdb ids deleted: "+Utils.formatThousands(cosmicIdsToBeDeleted.size()));
+                dao.deleteXdbIds(cosmicIdsToBeDeleted);
+                cosmicIdCountDiff -= cosmicIdsToBeDeleted.size();
+            }
+
+            if( !cosmicIdsMatching.isEmpty() ) {
+                log.info("  COSMIC xdb ids matching: "+Utils.formatThousands(cosmicIdsMatching.size()));
+                dao.updateModificationDate(cosmicIdsMatching);
+            }
+
+            NumberFormat plusMinusNF = new DecimalFormat(" +###,###,###; -###,###,###");
+            String diffCountStr = cosmicIdCountDiff!=0 ? "     difference: "+ plusMinusNF.format(cosmicIdCountDiff) : "     no changes";
+            log.info("final COSMIC ID count: "+Utils.formatThousands(initialCosmicIdCount+cosmicIdCountDiff)+diffCountStr);
+        } finally {
+            memoryMonitor.stop();
+            log.info(memoryMonitor.getSummary());
+
+            log.info("processing complete -- elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
+            log.info("===");
         }
-
-        if( !cosmicIdsToBeDeleted.isEmpty() ) {
-            log.info("  COSMIC xdb ids deleted: "+Utils.formatThousands(cosmicIdsToBeDeleted.size()));
-            dao.deleteXdbIds(cosmicIdsToBeDeleted);
-            cosmicIdCountDiff -= cosmicIdsToBeDeleted.size();
-        }
-
-        if( !cosmicIdsMatching.isEmpty() ) {
-            log.info("  COSMIC xdb ids matching: "+Utils.formatThousands(cosmicIdsMatching.size()));
-            dao.updateModificationDate(cosmicIdsMatching);
-        }
-
-        NumberFormat plusMinusNF = new DecimalFormat(" +###,###,###; -###,###,###");
-        String diffCountStr = cosmicIdCountDiff!=0 ? "     difference: "+ plusMinusNF.format(cosmicIdCountDiff) : "     no changes";
-        log.info("final COSMIC ID count: "+Utils.formatThousands(initialCosmicIdCount+cosmicIdCountDiff)+diffCountStr);
-
-        memoryMonitor.stop();
-        log.info(memoryMonitor.getSummary());
-
-        log.info("processing complete -- elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
-        log.info("===");
     }
 
     List<XdbId> getIncomingCosmicIds() throws Exception {
