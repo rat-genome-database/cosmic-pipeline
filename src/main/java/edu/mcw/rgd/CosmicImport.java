@@ -1,5 +1,6 @@
 package edu.mcw.rgd;
 
+import edu.mcw.rgd.dao.spring.IntStringMapQuery;
 import edu.mcw.rgd.datamodel.*;
 import edu.mcw.rgd.process.MemoryMonitor;
 import edu.mcw.rgd.process.Utils;
@@ -111,17 +112,18 @@ public class CosmicImport {
 
     List<XdbId> getIncomingCosmicIds() throws Exception {
 
-        List<Gene> genes = dao.getActiveGenes(SpeciesType.HUMAN);
-        List<XdbId> incomingCosmicIds = new ArrayList<XdbId>(genes.size());
-        for (Gene g: genes) {
+        List<IntStringMapQuery.MapPair> genes = dao.getSymbolForActiveGenes(SpeciesType.HUMAN);
+        List<XdbId> incomingCosmicIds = new ArrayList<>(genes.size());
+        for (IntStringMapQuery.MapPair gene: genes) {
+            String symbol = gene.stringValue;
             XdbId x = new XdbId();
-            x.setAccId(g.getSymbol());
+            x.setAccId(symbol);
             x.setSrcPipeline("COSMIC");
-            x.setRgdId(g.getRgdId());
+            x.setRgdId(gene.keyValue);
             x.setXdbKey(XdbId.XDB_KEY_COSMIC);
             x.setCreationDate(new Date());
             x.setModificationDate(new Date());
-            x.setLinkText(g.getSymbol());
+            x.setLinkText(symbol);
             incomingCosmicIds.add(x);
         }
         return incomingCosmicIds;

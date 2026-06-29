@@ -1,3 +1,6 @@
+Jun 29, 2026
+  build incoming ids via rgdcore getSymbolForActiveGenes (lightweight id+symbol fetch) instead of loading full Gene objects; refreshed rgdcore jar; updated dependencies
+
 Jun 1, 2026
   fixed modification-date update for matching COSMIC ids; ensure run summary is logged on failure; updated dependencies
 
