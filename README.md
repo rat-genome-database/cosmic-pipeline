@@ -38,6 +38,16 @@ For every active human gene, an `RGD_ACC_XDB` row is maintained with:
 The COSMIC website renders a page for each gene symbol, so the symbol itself is
 sufficient to construct the link.
 
+## Logging and notification
+
+- `logs/status.log` — run summary: counts of inserted, deleted and matching COSMIC ids
+  (rolled monthly); `logs/summary.log` holds the same summary for the last run only;
+  `logs/detail.log` adds debug-level progress
+- `logs/inserted.log`, `logs/deleted.log` — every COSMIC xref inserted / deleted
+
+`run.sh` emails `logs/summary.log` with subject "Cosmic Pipeline OK", or
+"Cosmic Pipeline FAILED (exit code N)" when the run fails; the script exits with java's exit code.
+
 ## Build and run
 
 Requires Java 17. Build with Gradle:

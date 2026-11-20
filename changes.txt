@@ -1,3 +1,6 @@
+Nov 20, 2026
+  run.sh: failed runs flagged in the email subject; OK/FAILED in the final log line; updated dependencies; updated README
+
 Jun 29, 2026
   build incoming ids via rgdcore getSymbolForActiveGenes (lightweight id+symbol fetch) instead of loading full Gene objects; refreshed rgdcore jar; updated dependencies
 
