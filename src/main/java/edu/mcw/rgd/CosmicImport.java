@@ -51,6 +51,7 @@ public class CosmicImport {
         MemoryMonitor memoryMonitor = new MemoryMonitor();
         memoryMonitor.start();
 
+        boolean ok = false;
         try {
             log.info(getVersion());
             log.info("   "+dao.getConnectionInfo());
@@ -101,11 +102,12 @@ public class CosmicImport {
             NumberFormat plusMinusNF = new DecimalFormat(" +###,###,###; -###,###,###");
             String diffCountStr = cosmicIdCountDiff!=0 ? "     difference: "+ plusMinusNF.format(cosmicIdCountDiff) : "     no changes";
             log.info("final COSMIC ID count: "+Utils.formatThousands(initialCosmicIdCount+cosmicIdCountDiff)+diffCountStr);
+            ok = true;
         } finally {
             memoryMonitor.stop();
             log.info(memoryMonitor.getSummary());
 
-            log.info("processing complete -- elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
+            log.info((ok ? "=== OK === " : "=== FAILED === ")+"elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
             log.info("===");
         }
     }
@@ -114,6 +116,7 @@ public class CosmicImport {
 
         List<IntStringMapQuery.MapPair> genes = dao.getSymbolForActiveGenes(SpeciesType.HUMAN);
         List<XdbId> incomingCosmicIds = new ArrayList<>(genes.size());
+        Date now = new Date(); // one timestamp for all incoming ids
         for (IntStringMapQuery.MapPair gene: genes) {
             String symbol = gene.stringValue;
             XdbId x = new XdbId();
@@ -121,8 +124,8 @@ public class CosmicImport {
             x.setSrcPipeline("COSMIC");
             x.setRgdId(gene.keyValue);
             x.setXdbKey(XdbId.XDB_KEY_COSMIC);
-            x.setCreationDate(new Date());
-            x.setModificationDate(new Date());
+            x.setCreationDate(now);
+            x.setModificationDate(now);
             x.setLinkText(symbol);
             incomingCosmicIds.add(x);
         }
